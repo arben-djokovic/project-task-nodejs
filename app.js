@@ -4,6 +4,8 @@ const db = require('./data/database');
 require('dotenv').config();
 const User = require("./models/User")
 const authRoutes = require("./routes/AuthRoutes")
+const postRoutes = require("./routes/PostRoutes");
+const { verifyToken } = require("./middlewares/middleware");
 
 const app = express()
 
@@ -13,6 +15,7 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use("/user", authRoutes)
+app.use("/post", postRoutes)
 
 
 db.connection()
