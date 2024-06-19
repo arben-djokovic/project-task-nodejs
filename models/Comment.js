@@ -10,7 +10,18 @@ class Comment{
     }
 
     static async addComment(postId, body){
-        const result = db.getDb().collection("comments").insertOne({postId: new ObjectId(postId), body: body, createdAt: new Date(), updatedAt: new Date()})
+        const result = await db.getDb().collection("comments").insertOne({postId: new ObjectId(postId), body: body, createdAt: new Date(), updatedAt: new Date()})
+        if(!result.acknowledged){
+            return {error: [{message: "Comment was not created, please try again"}]}
+        }
+        return result
+    }
+
+    static async deleteComment(id){
+        const result = await db.getDb().collection("comments").deleteOne({_id: new ObjectId(id)})
+        if(result.deletedCount == 0){
+            return {error: [{message: "Comment was not found"}]}
+        }
         return result
     }
 }
