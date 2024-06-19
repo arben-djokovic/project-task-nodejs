@@ -12,7 +12,19 @@ class Post{
     }
 
     static async addPost(title, body, tags){
-        const result = await db.getDb().collection("posts").insertOne({title: title, body: body, tags: tags, createdAt: new Date(), updatedAt: new Date()})
+        let tagsWithObjectIds = []
+        if(tags && tags.length > 0){
+            tagsWithObjectIds = tags.map(tag => {
+                if (isValidObjectId(tag)) {
+                    return new ObjectId(tag);
+                }
+                return null;
+            });
+            if (tags.length > 0 && !tagsWithObjectIds.every(tag => tag !== null)) {
+                return { error: [{ message: "Tags should contain valid ObjectIds or be empty" }] };
+            }
+        }
+        const result = await db.getDb().collection("posts").insertOne({title: title, body: body, tags: tagsWithObjectIds, createdAt: new Date(), updatedAt: new Date()})
         if(!result.acknowledged){
             result = {error: [{message: "Post was not created, please try again"}]}
         }
@@ -22,6 +34,19 @@ class Post{
     static async getPostById(id){
         const result = await db.getDb().collection("posts").findOne({_id: new ObjectId(id)})
         if(!result){
+            return {error: [{message: "Post was not found"}]}
+        }
+        return result
+    }
+
+    static async getAllPosts(){
+        const result = await db.getDb().collection("posts").find({}).toArray()
+        return result
+    }
+
+    static async deletePostById(id){
+        const result = await db.getDb().collection('posts').deleteOne({_id: new ObjectId(id)})
+        if(result.deletedCount == 0){
             return {error: [{message: "Post was not found"}]}
         }
         return result
