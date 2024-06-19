@@ -6,6 +6,7 @@ const User = require("./models/User")
 const authRoutes = require("./routes/AuthRoutes")
 const postRoutes = require("./routes/PostRoutes");
 const tagRoutes = require("./routes/TagRoutes");
+const commentRoutes = require("./routes/CommentRoutes");
 const { verifyToken } = require("./middlewares/middleware");
 
 const app = express()
@@ -18,6 +19,7 @@ app.use(bodyParser.json());
 app.use("/user", authRoutes)
 app.use("/post", postRoutes)
 app.use("/tag", tagRoutes)
+app.use("/comment", commentRoutes)
 
 
 db.connection()

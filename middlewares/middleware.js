@@ -21,6 +21,9 @@ const tagValidation = [
             return true;
         })
 ]
+const commentValidator = [
+    body("body").notEmpty().withMessage("Body is required"),
+]
 
 
 
@@ -50,5 +53,6 @@ const tagValidation = [
     authValidationRules,
     postValidation,
     tagValidation,
+    commentValidator,
     verifyToken
   }

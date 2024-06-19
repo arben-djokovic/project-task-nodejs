@@ -42,6 +42,12 @@ class Post{
                     localField: "tags",
                     foreignField: "_id",
                     as: "tagsInfo"
+                },
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "comments"
                 }
             }
         ]).toArray()

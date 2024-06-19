@@ -7,6 +7,8 @@ class User {
     this.password = password;
     this.username = username;
     this.id = id;
+    this.createdAt = new Date()
+    this.updatedAt = new Date()
   }
 
   static async login(username, password){
@@ -36,6 +38,8 @@ class User {
     await db.getDb().collection("users").insertOne({
       username: username,
       password: hashedPassword,
+      createdAt: new Date(),
+      updatedAt: new Date()
     });
     const token = await jwt.sign({ username: username }, process.env.secret_key)
     return {token: token}
