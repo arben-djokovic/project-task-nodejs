@@ -14,6 +14,11 @@ class Tag{
         }
         return result
     }
+
+    static async getAllTags(){
+        const result = await db.getDb().collection("tags").find({}).toArray()
+        return result
+    }
 }
 
 module.exports = Tag

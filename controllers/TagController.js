@@ -17,6 +17,16 @@ const createTag = async(req, res) => {
     }
 }
 
+const getTags = async(req, res) => {
+    try{
+        const result = await Tag.getAllTags()
+        res.json(result)
+    }catch(err){
+        res.sendStatus(500)
+    }
+}
+
 module.exports = {
-    createTag
+    createTag,
+    getTags
 }
