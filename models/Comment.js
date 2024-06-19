@@ -24,6 +24,17 @@ class Comment{
         }
         return result
     }
+
+    static async editComment(id, body){
+        const result = await db.getDb().collection("comments").updateOne({_id: new ObjectId(id)}, {$set: {body: body}})
+        if (result.matchedCount === 0) {
+            return {error: [{message: "Comment was not found"}]}
+        }
+        if (result.modifiedCount === 0) {
+            return {error: [{message: "Nothing to update"}]}
+        }
+        return result
+    }
 }
 
 module.exports = Comment

@@ -65,6 +65,12 @@ class Post{
                     localField: "tags",
                     foreignField: "_id",
                     as: "tagsInfo"
+                },
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "comments"
                 }
             }
         ]).toArray()
@@ -110,8 +116,10 @@ class Post{
                 set.tags = [];
             }
         }
-
-        set.updatedAt = new Date()
+        
+        if(set.title != undefined || set.body != undefined || set.tags != undefined){
+            set.updatedAt = new Date()
+        }
         const result = await db.getDb().collection("posts").updateOne({_id: new ObjectId(id)}, {$set: set})
         if (result.matchedCount === 0) {
             return {error: [{message: "Post was not found"}]}

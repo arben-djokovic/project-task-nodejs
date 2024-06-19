@@ -17,9 +17,9 @@ app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 
 app.use("/user", authRoutes)
-app.use("/post", postRoutes)
-app.use("/tag", tagRoutes)
-app.use("/comment", commentRoutes)
+app.use("/post", verifyToken,  postRoutes)
+app.use("/tag", verifyToken, tagRoutes)
+app.use("/comment", verifyToken, commentRoutes)
 
 
 db.connection()
