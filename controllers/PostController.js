@@ -55,9 +55,30 @@ const deletePost = async(req, res) => {
     }
 }
 
+const editPost = async(req, res) => {
+    if(!isValidObjectId(req.params.id)){
+        res.status(400).json({error: [{message: "Id is not valid"}]})
+    }
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+       return res.status(400).json({error: errors.array()}) 
+    }
+    try{
+        const result = await Post.editPost(req.params.id, req.body.title, req.body.body, req.body.tags)
+        if(result.error){
+            return res.status(400).json(result)
+        }
+        return res.json(result)
+    }catch(err){
+        console.log(err)
+        res.status(500).json("w"+err)
+    }
+}
+
 module.exports = {
     createPost,
     getPost,
     getPosts,
-    deletePost
+    deletePost,
+    editPost
 }

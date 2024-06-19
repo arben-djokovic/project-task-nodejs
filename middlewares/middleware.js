@@ -9,6 +9,21 @@ const postValidation = [
     body("title").notEmpty().withMessage("Title is required"),
     body("body").notEmpty().isLength({max: 500}).withMessage("Body is required and max length is 500")
 ]
+const tagValidation = [
+    body('name')
+        .notEmpty()
+        .withMessage('Name is required')
+        .custom(value => {
+            const words = value.trim().split(/\s+/);
+            if (words.length > 2) {
+                throw new Error('Name must have at most 2 words');
+            }
+            return true;
+        })
+]
+
+
+
   function verifyToken(req, res, next) {
     const bearerHeader = req.headers['authorization'];
 
@@ -34,5 +49,6 @@ const postValidation = [
   module.exports = {
     authValidationRules,
     postValidation,
+    tagValidation,
     verifyToken
   }

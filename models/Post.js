@@ -51,6 +51,49 @@ class Post{
         }
         return result
     }
+
+    static async editPost(id, title, body, tags){
+        let set = {}
+
+        if(title && title.length > 0){
+            set.title = title
+        }else if(title && title.length == 0){
+            return {error: [{message: "Title cant have 0 catacters"}]}
+        }
+
+        if(body && body.length > 0 && body.length <= 500){
+            set.body = body
+        }else if(body && body.length > 500){
+            return {error: [{message: "max length is 500 for body field "}]}
+        }
+
+        if (tags !== undefined) { 
+            if (tags.length > 0) {
+                set.tags = tags.map(tag => {
+                    if (isValidObjectId(tag) && tag.length == 24) {
+                        return new ObjectId(tag);
+                    }
+                    return null;
+                });
+
+                if (!set.tags.every(tag => tag !== null)) {
+                    return {error: [{message: "Tags should contain ids of tags"}]}
+                }
+            } else {
+                set.tags = [];
+            }
+        }
+
+        set.updatedAt = new Date()
+        const result = await db.getDb().collection("posts").updateOne({_id: new ObjectId(id)}, {$set: set})
+        if (result.matchedCount === 0) {
+            return {error: [{message: "Post was not found"}]}
+        }
+        if (result.modifiedCount === 0) {
+            return {error: [{message: "Nothing to update"}]}
+        }
+        return result
+    }
 }
 
 module.exports = Post
