@@ -32,7 +32,19 @@ class Post{
     }
 
     static async getPostById(id){
-        const result = await db.getDb().collection("posts").findOne({_id: new ObjectId(id)})
+        const result = await db.getDb().collection("posts").aggregate([
+            {
+                $match: { _id: new ObjectId(id) }
+            },
+            {
+                $lookup: {
+                    from: "tags",
+                    localField: "tags",
+                    foreignField: "_id",
+                    as: "tagsInfo"
+                }
+            }
+        ]).toArray()
         if(!result){
             return {error: [{message: "Post was not found"}]}
         }
@@ -40,7 +52,16 @@ class Post{
     }
 
     static async getAllPosts(){
-        const result = await db.getDb().collection("posts").find({}).toArray()
+        const result = await db.getDb().collection("posts").aggregate([
+            {
+                $lookup: {
+                    from: "tags",
+                    localField: "tags",
+                    foreignField: "_id",
+                    as: "tagsInfo"
+                }
+            }
+        ]).toArray()
         return result
     }
 

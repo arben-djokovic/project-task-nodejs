@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const db = require('../data/database');
 
 class Tag{
@@ -17,6 +18,12 @@ class Tag{
 
     static async getAllTags(){
         const result = await db.getDb().collection("tags").find({}).toArray()
+        return result
+    }
+
+    static async getPostsByTag(id){
+        const tagId = new ObjectId(id)
+        const result = await db.getDb().collection("posts").find({ tags: {$in: [tagId] }}).toArray();
         return result
     }
 }
