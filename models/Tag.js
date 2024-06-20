@@ -23,7 +23,27 @@ class Tag{
 
     static async getPostsByTag(id){
         const tagId = new ObjectId(id)
-        const result = await db.getDb().collection("posts").find({ tags: {$in: [tagId] }}).toArray();
+        const result = await db.getDb().collection("posts").aggregate([
+            {
+                $match: { tags: { $in: [tagId] } }
+            },
+            {
+                $lookup: {
+                    from: "tags",
+                    localField: "tags",
+                    foreignField: "_id",
+                    as: "tagsInfo"
+                }
+            },
+            {
+                $lookup: {
+                    from: "comments",
+                    localField: "_id",
+                    foreignField: "postId",
+                    as: "comments"
+                }
+            }
+        ]).toArray();
         return result
     }
 }

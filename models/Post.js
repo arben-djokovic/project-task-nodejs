@@ -42,7 +42,9 @@ class Post{
                     localField: "tags",
                     foreignField: "_id",
                     as: "tagsInfo"
-                },
+                }
+            },
+            {
                 $lookup: {
                     from: "comments",
                     localField: "_id",
@@ -65,7 +67,9 @@ class Post{
                     localField: "tags",
                     foreignField: "_id",
                     as: "tagsInfo"
-                },
+                }
+            },
+            {
                 $lookup: {
                     from: "comments",
                     localField: "_id",

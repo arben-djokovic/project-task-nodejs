@@ -22,7 +22,7 @@ class User {
         if(!isPasswordGood){
             return {error: [{message: "Incorrect password!"}]}
         }
-        const token = await jwt.sign({ username: username }, process.env.secret_key)
+        const token = await jwt.sign({ username: username }, process.env.secret_key, { expiresIn: '10h'})
         return {token: token}
     }else{
         return {error: [{message: "User not found!"}]}
@@ -41,7 +41,7 @@ class User {
       createdAt: new Date(),
       updatedAt: new Date()
     });
-    const token = await jwt.sign({ username: username }, process.env.secret_key)
+    const token = await jwt.sign({ username: username }, process.env.secret_key, { expiresIn: "10h"})
     return {token: token}
   }
 
