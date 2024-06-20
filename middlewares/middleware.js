@@ -1,13 +1,18 @@
 const { body } = require('express-validator');
 const jwt = require("jsonwebtoken");
 
+
 const authValidationRules = [
-    body('username').isLength({ min: 4, max: 20 }).withMessage("Username must be 4-20 in length"),
+    body('username').isLength({ min: 4, max: 20 }).withMessage("Username must be 4-20 in length").escape(),
     body('password').isLength({ min: 5, max: 20 }).withMessage("Password must be 5-20 in length")
   ];
 const postValidation = [
-    body("title").notEmpty().withMessage("Title is required"),
-    body("body").notEmpty().isLength({max: 500}).withMessage("Body is required and max length is 500")
+    body("title").notEmpty().withMessage("Title is required").escape(),
+    body("body").notEmpty().isLength({max: 500}).withMessage("Body is required and max length is 500").escape()
+]
+const postEscape = [
+    body("title").escape(),
+    body("body").escape()
 ]
 const tagValidation = [
     body('name')
@@ -19,11 +24,12 @@ const tagValidation = [
                 throw new Error('Name must have at most 2 words');
             }
             return true;
-        })
+        }).escape()
 ]
 const commentValidator = [
-    body("body").notEmpty().withMessage("Body is required"),
+    body("body").notEmpty().withMessage("Body is required").escape(),
 ]
+
 
 
 
@@ -54,5 +60,6 @@ const commentValidator = [
     postValidation,
     tagValidation,
     commentValidator,
+    postEscape,
     verifyToken
   }

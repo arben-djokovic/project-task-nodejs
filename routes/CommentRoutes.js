@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post("/:postId", commentValidator, addComment)
 router.delete("/:id", deleteComment)
-router.patch("/:id",commentValidator,  editComment)
+router.patch("/:id", commentValidator,  editComment)
 
 
 module.exports = router
